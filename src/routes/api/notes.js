@@ -2,8 +2,11 @@ import { Router } from 'express'
 
 import * as noteServices from '../../services/notes'
 import logger from '../../helpers/logger'
+import auth from '../../helpers/auth'
 
 const router = Router()
+
+router.use(auth.authenticate('local', { session: false }))
 
 router.get('/', async (req, res) => {
   const notes = await noteServices.getAll()

@@ -8,6 +8,7 @@ import helmet from 'helmet'
 import logger from './helpers/logger'
 import router from './routes'
 import { notFound, errorHandler } from './helpers/errors'
+import auth from './helpers/auth'
 
 const port = parseInt(process.env.PORT, 10) || 3000
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(morgan(process.env.MORGAN_LOG))
 app.use(cors({ origin: process.env.ORIGIN }))
 app.use(helmet())
+app.use(auth.initialize())
 
 app.use(router)
 
