@@ -1,18 +1,19 @@
 import { Router } from 'express'
 
-import * as notes from '../../helpers/db'
+import * as noteServices from '../../services/notes'
 import logger from '../../helpers/logger'
 
 const router = Router()
 
-router.get('/', (req, res) => {
-  res.send(notes.getAll())
+router.get('/', async (req, res) => {
+  const notes = await noteServices.getAll()
+  res.send(notes)
 })
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { note: newNote } = req.body
   if (newNote) {
-    const note = notes.add(newNote)
+    const note = await noteServices.add(newNote)
     if (note.error) {
       res.status(400)
     }
@@ -22,9 +23,9 @@ router.post('/', (req, res) => {
   }
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params
-  const note = notes.getById(id)
+  const note = await noteServices.getById(id)
   if (note) {
     res.send(note)
   } else {
@@ -33,10 +34,10 @@ router.get('/:id', (req, res) => {
   }
 })
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   const { id } = req.params
   const { note: updatedNote } = req.body
-  const response = notes.update(id, updatedNote)
+  const response = await noteServices.update(id, updatedNote)
 
   if (response.error) {
     res.status(400)
@@ -44,8 +45,8 @@ router.put('/:id', (req, res) => {
   res.send(response)
 })
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   const { id } = req.params
-  res.send(notes.remove(id))
+  res.send(await noteServices.remove(id))
 })
 export default router
