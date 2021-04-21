@@ -47,7 +47,7 @@ export const update = async (id, n) => {
   }
   let note = await getById(id)
   if (note) {
-    const { title, content } = note
+    const { title, content } = n
     await db('notes')
       .where({ id })
       .update({ title, content, updated_at: new Date().toLocaleString() })
